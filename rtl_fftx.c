@@ -1,4 +1,4 @@
-// gcc rtl_fft.c -o rtl_fft -lrtlsdr -lfftw3 -lm & ./rtl_fft
+// gcc rtl_fftx.c -o rtl_fftx -lrtlsdr -lfftw3 -lm
 
 #include <stdlib.h>
 #include <math.h>
@@ -108,7 +108,7 @@ void configure_gnuplot(){
 	fprintf(gnuplotPipe, "set title 'fft' enhanced\n");
 	fprintf(gnuplotPipe, "set xlabel 'Frequency (kHz)'\n");
 	fprintf(gnuplotPipe, "set ylabel 'Amplitude (dB)'\n");
-	float center_mhz = _czenter_freq / pow(10, 6);
+	float center_mhz = _center_freq / pow(10, 6);
 	float step_size = (n_read * pow(10, 3))  / pow(10, 6);
 	fprintf(gnuplotPipe, "set xtics ('%.1f' 1, '%.1f' 256, '%.1f' 512)\n", 
 		center_mhz-step_size, 
