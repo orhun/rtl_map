@@ -54,7 +54,6 @@ typedef struct SampleBin {
 } Bin;
 static Bin sample_bin[NUM_READ];
 
-void create_fft(int sample_c, unsigned char *buf);
 static void print_log(int level, char *format, ...){
 	raw_time = time(NULL);
 	struct tm *local_time = localtime(&raw_time);
@@ -101,7 +100,7 @@ static void gnuplot_exec(char *format, ...){
   	vfprintf(gnuplotPipe, format, vargs);
   	va_end(vargs);
 }
-void configure_gnuplot(){
+static void configure_gnuplot(){
 	if (!_use_gnuplot)
 		return;
 	gnuplotPipe = popen("gnuplot -persistent", "w");
@@ -119,7 +118,7 @@ void configure_gnuplot(){
 		center_mhz, 
 		center_mhz+step_size);
 }
-void configure_rtlsdr(){
+static void configure_rtlsdr(){
 
 	int device_count = rtlsdr_get_device_count();
 	if (!device_count) {
@@ -166,7 +165,7 @@ void configure_rtlsdr(){
 	if (r < 0)
 		log_fatal("Failed to reset buffers.\n");
 }
-void open_file(){
+static void open_file(){
 	if (_filename != NULL){
 		_write_file = 1;
 		if(!strcmp(_filename, "-")) {
@@ -180,22 +179,12 @@ void open_file(){
    		}
 	}
 }
-int cmp_sample(const void * a, const void * b){
+static int cmp_sample(const void * a, const void * b){
   float fa = *(const float*) a;
   float fb = *(const float*) b;
   return (fa > fb) - (fa < fb);
 }
-static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
-	create_fft(n_read, n_buf);
-	if (_cont_read){
-		usleep(1000*_refresh_rate);
-	}else{
-		log_info("Done, exiting...\n");
-		do_exit();
-	}
-}
-
-void create_fft(int sample_c, unsigned char *buf){
+static void create_fft(int sample_c, unsigned char *buf){
 	//Configure FFTW to convert the samples in time domain to frequency domain
 	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
 	out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
@@ -242,7 +231,16 @@ void create_fft(int sample_c, unsigned char *buf){
 	fftw_free(in); 
 	fftw_free(out);
 }
-void print_usage(){
+static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
+	create_fft(n_read, n_buf);
+	if (_cont_read){
+		usleep(1000*_refresh_rate);
+	}else{
+		log_info("Done, exiting...\n");
+		do_exit();
+	}
+}
+static void print_usage(){
 	char *usage =  "Usage:\t[-d device index (default: 0)]\n"
                    "\t[-s samplerate (default: 2048000 Hz)]\n"
 				   "\t[-f center frequency (Hz)] *\n"
@@ -258,7 +256,7 @@ void print_usage(){
     fprintf(stderr, "%s", usage);
     exit(0);
 }
-void parse_args(int argc, char **argv){
+static void parse_args(int argc, char **argv){
 	int opt;
 	while ((opt = getopt(argc, argv, "d:s:f:g:r:DCMOTh")) != -1) {
         switch (opt) {
@@ -304,7 +302,7 @@ void parse_args(int argc, char **argv){
 		print_usage();
 	_filename = argv[optind];
 }
-int main(int argc, char **argv){
+void main(int argc, char **argv){
 	parse_args(argc, argv);
 	register_signals();
 	configure_gnuplot();
