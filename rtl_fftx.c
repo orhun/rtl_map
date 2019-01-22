@@ -1,4 +1,4 @@
-// gcc rtl_fftx.c -o rtl_fftx -lrtlsdr -lfftw3 -lm
+// gcc rtl_fft.c -o rtl_fft -lrtlsdr -lfftw3 -lm & ./rtl_fft
 
 #include <stdlib.h>
 #include <math.h>
@@ -54,7 +54,6 @@ typedef struct SampleBin {
 } Bin;
 static Bin sample_bin[NUM_READ];
 
-static void sig_handler(int signum);
 void create_fft(int sample_c, unsigned char *buf);
 static void print_log(int level, char *format, ...){
 	raw_time = time(NULL);
@@ -76,15 +75,6 @@ static void print_log(int level, char *format, ...){
   	vfprintf(stderr, format, vargs);
   	va_end(vargs);
 }
-static void register_signals(){
-	sig_act.sa_handler = sig_handler;
-    sigemptyset(&sig_act.sa_mask);
-    sig_act.sa_flags = 0;
-    sigaction(SIGINT, &sig_act, NULL);
-    sigaction(SIGTERM, &sig_act, NULL);
-    sigaction(SIGQUIT, &sig_act, NULL);
-    sigaction(SIGPIPE, &sig_act, NULL);
-}
 static void do_exit(){
 	rtlsdr_cancel_async(dev);
 	if(_use_gnuplot)
@@ -97,6 +87,20 @@ static void sig_handler(int signum){
     log_info("Signal caught, exiting...\n");
 	do_exit();
 }
+static void register_signals(){
+	sig_act.sa_handler = sig_handler;
+    sigemptyset(&sig_act.sa_mask);
+    sig_act.sa_flags = 0;
+    sigaction(SIGINT, &sig_act, NULL);
+    sigaction(SIGTERM, &sig_act, NULL);
+    sigaction(SIGQUIT, &sig_act, NULL);
+    sigaction(SIGPIPE, &sig_act, NULL);
+}
+static void gnuplot_exec(char *format, ...){
+	va_start(vargs, format);
+  	vfprintf(gnuplotPipe, format, vargs);
+  	va_end(vargs);
+}
 void configure_gnuplot(){
 	if (!_use_gnuplot)
 		return;
@@ -105,12 +109,12 @@ void configure_gnuplot(){
 		log_error("Failed to open gnuplot pipe.");
 		exit(1);
 	}
-	fprintf(gnuplotPipe, "set title 'fft' enhanced\n");
-	fprintf(gnuplotPipe, "set xlabel 'Frequency (kHz)'\n");
-	fprintf(gnuplotPipe, "set ylabel 'Amplitude (dB)'\n");
+	gnuplot_exec("set title 'RTL-FFTX' enhanced\n");
+	gnuplot_exec("set xlabel 'Frequency (kHz)'\n");
+	gnuplot_exec("set ylabel 'Amplitude (dB)'\n");
 	float center_mhz = _center_freq / pow(10, 6);
 	float step_size = (n_read * pow(10, 3))  / pow(10, 6);
-	fprintf(gnuplotPipe, "set xtics ('%.1f' 1, '%.1f' 256, '%.1f' 512)\n", 
+	gnuplot_exec("set xtics ('%.1f' 1, '%.1f' 256, '%.1f' 512)\n", 
 		center_mhz-step_size, 
 		center_mhz, 
 		center_mhz+step_size);
@@ -213,7 +217,7 @@ void create_fft(int sample_c, unsigned char *buf){
 	if(!_cont_read)
 		log_info("Creating FFT graph from samples using gnuplot...\n");
 	if(_use_gnuplot)
-		fprintf(gnuplotPipe, "plot '-' smooth frequency with linespoints lt -1 notitle\n");
+		gnuplot_exec("plot '-' smooth frequency with linespoints lt -1 notitle\n");
 	for (int i=0; i < sample_c; i++){
 		out_r = pow(creal(out[i]), 2);
 		out_i =  pow(cimag(out[i]), 2);
@@ -225,13 +229,13 @@ void create_fft(int sample_c, unsigned char *buf){
 		if(_write_file)
 			fprintf(file, "%d	%f\n", i+1, db);
 		if(_use_gnuplot)
-			fprintf(gnuplotPipe, "%d	%f\n", db, i+1);
+			gnuplot_exec("%d	%f\n", db, i+1);
 		sample_bin[i].id = i;
 		sample_bin[i].val = db;
 	}
 	//qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
 	if(_use_gnuplot){
-		fprintf(gnuplotPipe, "e\n");
+		gnuplot_exec("e\n");
 		fflush(gnuplotPipe);
 	}
 	fftw_destroy_plan(fftwp);
