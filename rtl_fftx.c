@@ -108,7 +108,7 @@ static void configure_gnuplot(){
 		log_error("Failed to open gnuplot pipe.");
 		exit(1);
 	}
-	gnuplot_exec("set title 'RTL-FFTX' enhanced\n");
+	gnuplot_exec("set title 'rtl-fftx' enhanced\n");
 	gnuplot_exec("set xlabel 'Frequency (kHz)'\n");
 	gnuplot_exec("set ylabel 'Amplitude (dB)'\n");
 	float center_mhz = _center_freq / pow(10, 6);
@@ -241,18 +241,19 @@ static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
 	}
 }
 static void print_usage(){
-	char *usage =  "Usage:\t[-d device index (default: 0)]\n"
-                   "\t[-s samplerate (default: 2048000 Hz)]\n"
-				   "\t[-f center frequency (Hz)] *\n"
-				   "\t[-g gain (0 for auto) (default: 1.4)]\n"
-				   "\t[-r refresh rate for -C read (default: 500ms)]\n"
-				   "\t[-D don't show gnuplot graph (default: show)]\n"
-				   "\t[-C continuously read samples (default: off)]\n"
-				   "\t[-M show magnitude graph (default graph: dB)]\n"
-				   "\t[-O disable offset tuning (default: on)]\n"
-				   "\t[-T turn off log colors (default: on)]\n"
-				   "\t[-h show this help message and exit]\n"
-                   "\t[filename (a '-' dumps samples to stdout)]\n\n";
+	char *usage	= "rtl_fftx, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)\n\n"
+				  "Usage:\t[-d device index (default: 0)]\n"
+                  "\t[-s samplerate (default: 2048000 Hz)]\n"
+				  "\t[-f center frequency (Hz)] *\n"
+				  "\t[-g gain (0 for auto) (default: 1.4)]\n"
+				  "\t[-r refresh rate for -C read (default: 500ms)]\n"
+				  "\t[-D don't show gnuplot graph (default: show)]\n"
+				  "\t[-C continuously read samples (default: off)]\n"
+				  "\t[-M show magnitude graph (default graph: dB)]\n"
+				  "\t[-O disable offset tuning (default: on)]\n"
+				  "\t[-T turn off log colors (default: on)]\n"
+				  "\t[-h show this help message and exit]\n"
+                  "\t[filename (a '-' dumps samples to stdout)]\n\n";
     fprintf(stderr, "%s", usage);
     exit(0);
 }
