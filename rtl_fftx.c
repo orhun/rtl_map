@@ -54,7 +54,17 @@ typedef struct SampleBin {
 } Bin;
 static Bin sample_bin[NUM_READ];
 
-static void print_log(int level, char *format, ...){
+// TODO: Comment variables, TODOs and notes!
+
+/*!
+ * Print log message with time, level and text.
+ * Also supports format specifiers.
+ *
+ * \param level logging level (info:0, error:1 etc.)
+ * \param format string and format specifiers for vfprintf function  
+ * \return 0 on success
+ */
+static int print_log(int level, char *format, ...){
 	raw_time = time(NULL);
 	struct tm *local_time = localtime(&raw_time);
 	t_buf[strftime(t_buf, sizeof(t_buf), 
@@ -73,7 +83,13 @@ static void print_log(int level, char *format, ...){
   	va_start(vargs, format);
   	vfprintf(stderr, format, vargs);
   	va_end(vargs);
+	return 0;
 }
+/*!
+ * Cancel asynchronous read operation on the SDR device. 
+ * Close pipe and file.
+ * Exit.
+ */
 static void do_exit(){
 	rtlsdr_cancel_async(dev);
 	if(_use_gnuplot)
@@ -82,11 +98,23 @@ static void do_exit(){
 		fclose(file);
 	exit(0);
 }
+/*!
+ * Callback for sigaction struct (sig_act).
+ * Referenced at register_signals() function.
+ *
+ * \param signum Incoming signal number from os
+ */
 static void sig_handler(int signum){
     log_info("Signal caught, exiting...\n");
 	do_exit();
 }
-static void register_signals(){
+/*!
+ * Set signals and assign them a handler
+ * for catching os signals.
+ *
+ * \return 0 on success
+ */
+static int register_signals(){
 	sig_act.sa_handler = sig_handler;
     sigemptyset(&sig_act.sa_mask);
     sig_act.sa_flags = 0;
@@ -94,15 +122,32 @@ static void register_signals(){
     sigaction(SIGTERM, &sig_act, NULL);
     sigaction(SIGQUIT, &sig_act, NULL);
     sigaction(SIGPIPE, &sig_act, NULL);
+	return 0;
 }
+/*!
+ * Execute gnuplot commands through the opened pipe.
+ *
+ * \param format string (command) and format specifiers
+ * \return 0 on success
+ */
 static void gnuplot_exec(char *format, ...){
 	va_start(vargs, format);
   	vfprintf(gnuplotPipe, format, vargs);
   	va_end(vargs);
+	return 0;
 }
-static void configure_gnuplot(){
+/*!
+ * Open gnuplot pipe.
+ * Set labels & title.
+ * Set xtics after calculation of X-Axis's starting and ending point.
+ * Exits on failure at opening gnuplot pipe.
+ * 
+ * \return 0 on success
+ * \return 1 on given -D argument (don't use gnuplot)
+ */
+static int configure_gnuplot(){
 	if (!_use_gnuplot)
-		return;
+		return 1;
 	gnuplotPipe = popen("gnuplot -persistent", "w");
 	if (!gnuplotPipe) {
 		log_error("Failed to open gnuplot pipe.");
@@ -117,8 +162,16 @@ static void configure_gnuplot(){
 		center_mhz-step_size, 
 		center_mhz, 
 		center_mhz+step_size);
+	return 0;
 }
-static void configure_rtlsdr(){
+/*!
+ * Configure RTL-SDR device according to given optarg parameters.
+ * Exits on failure at finding device from ID or
+ * opening the device with given ID.
+ *
+ * \return 0 on success
+ */
+static int configure_rtlsdr(){
 
 	int device_count = rtlsdr_get_device_count();
 	if (!device_count) {
@@ -164,8 +217,17 @@ static void configure_rtlsdr(){
 	int r = rtlsdr_reset_buffer(dev);
 	if (r < 0)
 		log_fatal("Failed to reset buffers.\n");
+
+	return 0;
 }
-static void open_file(){
+/*!
+ * Open file with given _filename parameter.
+ * Set 'stdout' output if _filename is given as a single dash.
+ * Exits on failure in opening the file.
+ * 
+ * \return 0 on success
+ */
+static int open_file(){
 	if (_filename != NULL){
 		_write_file = 1;
 		if(!strcmp(_filename, "-")) {
@@ -178,12 +240,28 @@ static void open_file(){
 			}
    		}
 	}
+	return 0;
 }
+/*!
+ * Compare two float samples for qsort function.
+ *
+ * \param a first sample
+ * \param b second sample
+ * \return value for comparing
+ */
 static int cmp_sample(const void * a, const void * b){
   float fa = *(const float*) a;
   float fb = *(const float*) b;
   return (fa > fb) - (fa < fb);
 }
+/*!
+ * Create FFT graph from raw I/Q samples read from RTL-SDR.
+ * Uses gnuplot for creating graph. (optional, see -D arg.)
+ * Uses fftw3 library for FFT's computations.
+ *
+ * \param sample_c sample count, also used for FFT size
+ * \param buf array that contains I/Q samples
+ */
 static void create_fft(int sample_c, unsigned char *buf){
 	//Configure FFTW to convert the samples in time domain to frequency domain
 	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
@@ -231,6 +309,17 @@ static void create_fft(int sample_c, unsigned char *buf){
 	fftw_free(in); 
 	fftw_free(out);
 }
+/*!
+ * Asynchronous read callback.
+ * Program jump to this function after read operation finished.
+ * Operates create_fft() function and provides continuous read
+ * depending on the -C param.
+ * Exits if -C param is not given.
+ *
+ * \param n_buf raw I/Q samples
+ * \param len length of buffer
+ * \param ctx context which is given at rtlsdr_read_async(...)
+ */
 static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
 	create_fft(n_read, n_buf);
 	if (_cont_read){
@@ -240,6 +329,9 @@ static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
 		do_exit();
 	}
 }
+/*!
+ * Print usage and exit.
+ */
 static void print_usage(){
 	char *usage	= "rtl_fftx, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)\n\n"
 				  "Usage:\t[-d device index (default: 0)]\n"
@@ -257,7 +349,14 @@ static void print_usage(){
     fprintf(stderr, "%s", usage);
     exit(0);
 }
-static void parse_args(int argc, char **argv){
+/*!
+ * Parse command line arguments.
+ *
+ * \param argc argument count
+ * \param argv argument vector
+ * \return 0 on success
+ */
+static int parse_args(int argc, char **argv){
 	int opt;
 	while ((opt = getopt(argc, argv, "d:s:f:g:r:DCMOTh")) != -1) {
         switch (opt) {
@@ -302,7 +401,15 @@ static void parse_args(int argc, char **argv){
 	if (!_center_freq)
 		print_usage();
 	_filename = argv[optind];
+	return 0;
 }
+/*!
+ * Entry point (Main)
+ * Self-explanatory.
+ *
+ * \param argc argument count
+ * \param argv argument vector
+ */
 void main(int argc, char **argv){
 	parse_args(argc, argv);
 	register_signals();
