@@ -404,7 +404,7 @@ static int parse_args(int argc, char **argv){
 	return 0;
 }
 /*!
- * Entry point (Main)
+ * Entry point (main)
  * Self-explanatory.
  *
  * \param argc argument count
