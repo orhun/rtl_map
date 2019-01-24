@@ -130,7 +130,7 @@ static int register_signals(){
  * \param format string (command) and format specifiers
  * \return 0 on success
  */
-static void gnuplot_exec(char *format, ...){
+static int gnuplot_exec(char *format, ...){
 	va_start(vargs, format);
   	vfprintf(gnuplotPipe, format, vargs);
   	va_end(vargs);
