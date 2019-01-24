@@ -1,4 +1,4 @@
-// gcc rtl_fft.c -o rtl_fft -lrtlsdr -lfftw3 -lm & ./rtl_fft
+// gcc rtl_fftx.c -o rtl_fftx -lrtlsdr -lfftw3 -lm
 
 #include <stdlib.h>
 #include <math.h>
