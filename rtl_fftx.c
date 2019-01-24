@@ -11,48 +11,68 @@
 #include <fftw3.h>
 #include <rtl-sdr.h>
 
-#define NUM_READ 512
+#define NUM_READ 512 
 #define log_info(...) print_log(INFO, __VA_ARGS__)
 #define log_error(...) print_log(ERROR, __VA_ARGS__)
 #define log_fatal(...) print_log(FATAL, __VA_ARGS__)
 
-static rtlsdr_dev_t *dev;
-static fftw_plan fftwp;
-static fftw_complex *in, *out;
-static FILE *gnuplotPipe, *file;
-static struct sigaction sig_act;
-static const int n_read = NUM_READ;
-static int n, out_r, out_i,
-	_center_freq,
-	_dev_id = 0, 
-	_samp_rate = n_read * 4000,
-	_gain = 14,
-	_refresh_rate = 500,
-	_use_gnuplot = 1,
-	_cont_read = 0,
-	_mag_graph = 0,
-	_offset_tuning = 1,
-	_log_colors = 1,
-	_write_file = 0;
-static float amp, db;
-static char t_buf[16],
-	*_filename,
-	*log_levels[] = {
-		"INFO", "ERROR", "FATAL"
+static rtlsdr_dev_t *dev; /*!< RTL-SDR device */
+static fftw_plan fftwp; /**!
+						 * FFT plan that will contain 
+ 						 * all the data that FFTW needs 
+ 						 * to compute the FFT 
+ 						 */ 
+static fftw_complex *in, *out; /*!< Input and output arrays of the transform */
+static FILE *gnuplotPipe, *file; /**!
+								  * Pipe for communicating with gnuplot
+								  * File to write 
+								  */
+static struct sigaction sig_act; /*!< For changing the signal actions */
+static const int n_read = NUM_READ; /*!< Sample count & data points & FFT size */
+static int n, /*!< Used at raw I/Q data to complex conversion */
+	out_r, out_i, /*!< Real and imaginary parts of FFT *out values */
+	_center_freq, /*!< [ARG] RTL-SDR center frequency (mandatory) */
+	_dev_id = 0, /*!< [ARG] RTL-SDR device ID (optional) */
+	_samp_rate = n_read * 4000, /*!< [ARG] Sample rate (optional) */
+	_gain = 14, /*!< [ARG] Device gain (optional) */
+	_refresh_rate = 500, /*!< [ARG] Refresh interval for continuous read (optional) */
+	_use_gnuplot = 1, /*!< [ARG] Use gnuplot or not (optional) */
+	_cont_read = 0, /*!< [ARG] Continuously read samples from device (optional) */
+	_mag_graph = 0, /*!< [ARG] Show magnitude instead of dB (optional) */
+	_offset_tuning = 1, /**!
+ 						 * [ARG] Enable or disable offset tuning for zero-IF tuners
+						 * which allows to avoid problems caused by the DC offset 
+						 * of the ADCs and 1/f noise. (optional)
+						 */
+	_log_colors = 1, /*!< [ARG] Use colored flags while logging (optional) */
+	_write_file = 0; /*!< [ARG] Write output of the FFT to a file|stdout (optional) */
+static float amp, db; /*!< Amplitude & dB */
+static char t_buf[16], /*!< Time buffer, used for getting current time */
+	*_filename, /*!< [ARG] File name to write samples (optional) */
+	*log_levels[] = { 
+		"INFO", "ERROR", "FATAL" /*!< Log levels */
 	},
 	*level_colors[] = {
-		"\x1b[92m", "\x1b[91m", "\x1b[33m"
+		"\x1b[92m", "\x1b[91m", "\x1b[33m" /*!< Log level colors (green, red, yellow) */
 	},
-	*bold_attr = "\x1b[1m",
-	*all_attr_off = "\x1b[0m";
-static va_list vargs;
-static time_t raw_time;
-enum log_level {INFO, ERROR, FATAL};
-typedef struct SampleBin {
+	*bold_attr = "\x1b[1m", /*!< Enable bold text in terminal */
+	*all_attr_off = "\x1b[0m"; /*!< Clear previous attributes in terminal */
+enum log_level {INFO, ERROR, FATAL}; /*!< Log level enumeration */
+static va_list vargs;  /*!< Holds information about variable arguments */
+static time_t raw_time; /*!< Represents time value */
+/**!
+ * 'Bin' is created from 'SampleBin' struct with
+ * the purpose of storing sample IDs and values to
+ * make data processing operations more easier and faster.
+ * Such as classification and sorting.
+ * NOTE: This variable is not used properly yet,
+ * just copying values and IDs in it for now.
+ */
+typedef struct SampleBin { 
 	float val;
     int id;
 } Bin;
-static Bin sample_bin[NUM_READ];
+static Bin sample_bin[NUM_READ]; /*!< 'Bin' array that will contain IDs and values */
 
 // TODO: Comment variables, TODOs and notes!
 
@@ -179,11 +199,11 @@ static int configure_rtlsdr(){
 		exit(1);
 	}
 	log_info("Found %d device(s):\n", device_count);
-	for(int n = 0; n < device_count; n++){
+	for(int i = 0; i < device_count; i++){
 		if(_log_colors)
-			log_info("#%d: %s%s%s\n", n, bold_attr, rtlsdr_get_device_name(n), all_attr_off);
+			log_info("#%d: %s%s%s\n", n, bold_attr, rtlsdr_get_device_name(i), all_attr_off);
 		else
-			log_info("#%d: %s\n", n, rtlsdr_get_device_name(n));
+			log_info("#%d: %s\n", n, rtlsdr_get_device_name(i));
 	}
 
 	int dev_open = rtlsdr_open(&dev, _dev_id);
