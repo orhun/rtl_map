@@ -18,15 +18,15 @@
 
 static rtlsdr_dev_t *dev; /*!< RTL-SDR device */
 static fftw_plan fftwp; /**!
-						 * FFT plan that will contain 
- 						 * all the data that FFTW needs 
- 						 * to compute the FFT 
- 						 */ 
+			 * FFT plan that will contain 
+ 			 * all the data that FFTW needs 
+ 			 * to compute the FFT 
+ 			 */ 
 static fftw_complex *in, *out; /*!< Input and output arrays of the transform */
 static FILE *gnuplotPipe, *file; /**!
-								  * Pipe for communicating with gnuplot
-								  * File to write 
-								  */
+				  * Pipe for communicating with gnuplot
+				  * File to write 
+				  */
 static struct sigaction sig_act; /*!< For changing the signal actions */
 static const int n_read = NUM_READ; /*!< Sample count & data points & FFT size */
 static int n, /*!< Used at raw I/Q data to complex conversion */
@@ -40,10 +40,10 @@ static int n, /*!< Used at raw I/Q data to complex conversion */
 	_cont_read = 0, /*!< [ARG] Continuously read samples from device (optional) */
 	_mag_graph = 0, /*!< [ARG] Show magnitude instead of dB (optional) */
 	_offset_tuning = 1, /**!
- 						 * [ARG] Enable or disable offset tuning for zero-IF tuners
-						 * which allows to avoid problems caused by the DC offset 
-						 * of the ADCs and 1/f noise. (optional)
-						 */
+ 			     * [ARG] Enable or disable offset tuning for zero-IF tuners
+			     * which allows to avoid problems caused by the DC offset 
+			     * of the ADCs and 1/f noise. (optional)
+			     */
 	_log_colors = 1, /*!< [ARG] Use colored flags while logging (optional) */
 	_write_file = 0; /*!< [ARG] Write output of the FFT to a file|stdout (optional) */
 static float amp, db; /*!< Amplitude & dB */
