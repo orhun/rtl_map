@@ -141,6 +141,11 @@ static int register_signals(){
     sigaction(SIGINT, &sig_act, NULL);
     sigaction(SIGTERM, &sig_act, NULL);
     sigaction(SIGQUIT, &sig_act, NULL);
+	/**!
+	* NOTE: Including the pipe signal might cause 
+	* problems with the pipe communication.
+	* However, in tests we got any at problems at all.
+	*/
     sigaction(SIGPIPE, &sig_act, NULL);
 	return 0;
 }
@@ -176,6 +181,14 @@ static int configure_gnuplot(){
 	gnuplot_exec("set title 'rtl-fftx' enhanced\n");
 	gnuplot_exec("set xlabel 'Frequency (kHz)'\n");
 	gnuplot_exec("set ylabel 'Amplitude (dB)'\n");
+	/**!
+	* Compute center frequency in MHz. [Center freq./10^6]
+	* Step size = [(512*10^3)/10^6] = 0.512
+	* Substract and add step size to center frequency for
+	* finding max and min distance from center frequency.
+	* NOTE: I don't know if this is the right way determine the min/max points.
+	* TODO: Check correctness of this calculation.
+	*/
 	float center_mhz = _center_freq / pow(10, 6);
 	float step_size = (n_read * pow(10, 3))  / pow(10, 6);
 	gnuplot_exec("set xtics ('%.1f' 1, '%.1f' 256, '%.1f' 512)\n", 
@@ -192,7 +205,6 @@ static int configure_gnuplot(){
  * \return 0 on success
  */
 static int configure_rtlsdr(){
-
 	int device_count = rtlsdr_get_device_count();
 	if (!device_count) {
 		log_error("No supported devices found.\n");
@@ -205,7 +217,6 @@ static int configure_rtlsdr(){
 		else
 			log_info("#%d: %s\n", n, rtlsdr_get_device_name(i));
 	}
-
 	int dev_open = rtlsdr_open(&dev, _dev_id);
 	if (dev_open < 0) {
 		log_fatal("Failed to open RTL-SDR device #%d\n", _dev_id);
@@ -226,7 +237,6 @@ static int configure_rtlsdr(){
 			fprintf(stderr, "%.1f ", gains[i] / 10.0);
 		fprintf(stderr, "\n");
 	}
-
 	rtlsdr_set_offset_tuning(dev, _offset_tuning);
 	rtlsdr_set_center_freq(dev, _center_freq);
 	rtlsdr_set_sample_rate(dev, _samp_rate);
@@ -333,8 +343,8 @@ static void create_fft(int sample_c, unsigned char *buf){
  * Asynchronous read callback.
  * Program jump to this function after read operation finished.
  * Operates create_fft() function and provides continuous read
- * depending on the -C param.
- * Exits if -C param is not given.
+ * depending on the -C argument.
+ * Exits if -C argument is not given.
  *
  * \param n_buf raw I/Q samples
  * \param len length of buffer
