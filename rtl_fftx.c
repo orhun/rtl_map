@@ -498,7 +498,8 @@ static int parse_args(int argc, char **argv){
                 _center_freq = atoi(optarg);
                 break;
             case 'g':
-                _gain = (int)(atof(optarg) * 10); /* tenths of a dB */
+				/**! Tenths of a dB */
+                _gain = (int)(atof(optarg) * 10); 
                 break;
 			case 'r':
                 _refresh_rate = atoi(optarg);
@@ -526,6 +527,7 @@ static int parse_args(int argc, char **argv){
                 break;
         }
     }
+	/**! Center frequency (-f) is mandatory. */
 	if (!_center_freq)
 		print_usage();
 	_filename = argv[optind];
