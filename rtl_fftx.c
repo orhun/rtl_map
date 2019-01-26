@@ -309,7 +309,7 @@ static int cmp_sample(const void * a, const void * b){
  * \param sample_c sample count, also used for FFT size
  * \param buf array that contains I/Q samples
  */
-static void create_fft(int sample_c, unsigned char *buf){
+static void create_fft(int sample_c, uint8_t *buf){
 	/**! 
 	 * Configure FFTW to convert the samples in time domain to frequency domain. 
 	 * Allocate memory for 'in' and 'out' arrays.
@@ -387,7 +387,7 @@ static void create_fft(int sample_c, unsigned char *buf){
  * \param len length of buffer
  * \param ctx context which is given at rtlsdr_read_async(...)
  */
-static void async_read_callback(unsigned char *n_buf, uint32_t len, void *ctx){
+static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 	create_fft(n_read, n_buf);
 	if (_cont_read){
 		usleep(1000*_refresh_rate);
