@@ -334,25 +334,44 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * initialization time is not important, use FFT_MEASURE. 
 	 */
 	fftwp = fftw_plan_dft_1d(sample_c, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
-
-	//convert buffer from IQ to complex ready for FFTW, seems that rtlsdr outputs IQ data as IQIQIQIQIQIQ so ......
+	/**!
+	 * Convert buffer from IQ to complex ready for FFTW.
+	 * RTL-SDR's output is 'IQIQIQ...' so we have to read two samples 
+	 * at the same time. 'n' is declared for this approach.
+	 * Sample is 127 for zero signal, so substract 127 for exact value.
+	 * Loop through samples and fill 'in' array with complex samples.
+	 * 
+	 * NOTE: There is a common issue with cheap RTL-SDR receivers which
+	 * is 'center frequency spike' / 'central peak' problem related to 
+	 * I/Q imbalance. This problem can be solved with a implementation of 
+	 * some algorithms.
+	 * More detail: 
+	 * https://github.com/roger-/pyrtlsdr/issues/94
+	 * https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms1-ebz/iq_correction
+	 *
+	 * TODO: Implement I/Q correction
+	 */
 	n = 0;
 	for (int i=0; i<sample_c; i+=2){
-		//sample is 127 for zero signal,so 127 +/-127
 		in[i] = (buf[n]-127) + (buf[n+1]-127) * I;
 		n++;
 	}
-	//Convert the complex samples to complex frequency domain
+	/**! 
+	 * Convert the complex samples to complex frequency domain.
+	 * Compute FFT.
+	 */
 	fftw_execute(fftwp);
-
-	//compute magnitude from complex = sqrt(real^2 + imaginary^2)
-	//magnitude [dB] = 10 * Log(sqr(Re^2 + Im^2))
-	//print the 512 bin spectrum as numbers
 	if(!_cont_read)
 		log_info("Creating FFT graph from samples using gnuplot...\n");
 	if(_use_gnuplot)
 		gnuplot_exec("plot '-' smooth frequency with linespoints lt -1 notitle\n");
 	for (int i=0; i < sample_c; i++){
+		/**! 
+		 * Compute magnitude from complex values. [Sqr(Re^2 + Im^2)]
+		 * Compute amplitude (dB) from magnitude. [10 * Log(magnitude)]
+		 *
+		 * TODO: Check correctness of this calculation.
+		 */
 		out_r = pow(creal(out[i]), 2);
 		out_i =  pow(cimag(out[i]), 2);
 		amp = sqrt(out_r + out_i);
@@ -364,14 +383,32 @@ static void create_fft(int sample_c, uint8_t *buf){
 			fprintf(file, "%d	%f\n", i+1, db);
 		if(_use_gnuplot)
 			gnuplot_exec("%d	%f\n", db, i+1);
+		/**! 
+		 * Fill sample_bin with ID and values.
+		 *
+		 * NOTE: sample_bin is not used anywhere. 
+		 *
+		 * IDEA: Find the maximum value of samples, show it on graph 
+		 * with a different color.  Might be useful for some kind of 
+		 * frequency scanner.
+		 * If you want to sort values see qsort function.
+		 * Example: qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
+		 */
 		sample_bin[i].id = i;
 		sample_bin[i].val = db;
 	}
-	//qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
 	if(_use_gnuplot){
+		/**!
+		 * Stop giving points to gnuplot with 'e' command.
+		 * Have to flush the output buffer for [read -> graph] persistence.
+		 */
 		gnuplot_exec("e\n");
 		fflush(gnuplotPipe);
 	}
+	/**!
+	 * Deallocate FFT plan.
+	 * Free 'in' and 'out' memory regions.
+	 */
 	fftw_destroy_plan(fftwp);
 	fftw_free(in); 
 	fftw_free(out);
