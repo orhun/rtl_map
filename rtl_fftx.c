@@ -75,8 +75,6 @@ typedef struct SampleBin {
 } Bin;
 static Bin sample_bin[NUM_READ]; /*!< 'Bin' array that will contain IDs and values */
 
-// TODO: Comment variables, TODOs and notes!
-
 /*!
  * Print log message with time, level and text.
  * Also supports format specifiers.
@@ -189,7 +187,7 @@ static int configure_gnuplot(){
 	* finding max and min distance from center frequency.
 	*
 	* NOTE: I don't know if this is the right way determine the min/max points.
-	* TODO: Check correctness of this calculation.
+	* TODO #4: Check correctness of this calculation.
 	*/
 	float center_mhz = _center_freq / pow(10, 6);
 	float step_size = (n_read * pow(10, 3))  / pow(10, 6);
@@ -349,7 +347,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * https://github.com/roger-/pyrtlsdr/issues/94
 	 * https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms1-ebz/iq_correction
 	 *
-	 * TODO: Implement I/Q correction
+	 * TODO #1: Implement I/Q correction
 	 */
 	n = 0;
 	for (int i=0; i<sample_c; i+=2){
@@ -370,7 +368,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 		 * Compute magnitude from complex values. [Sqr(Re^2 + Im^2)]
 		 * Compute amplitude (dB) from magnitude. [10 * Log(magnitude)]
 		 *
-		 * TODO: Check correctness of this calculation.
+		 * TODO #5: Check correctness of this calculation.
 		 */
 		out_r = pow(creal(out[i]), 2);
 		out_i =  pow(cimag(out[i]), 2);
@@ -388,7 +386,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 		 *
 		 * NOTE: sample_bin is not used anywhere. 
 		 *
-		 * TODO: Find the maximum value of samples, show it on graph 
+		 * TODO #2: Find the maximum value of samples, show it on graph 
 		 * with a different color.  Might be useful for frequency scanner.
 		 * If you want to sort values see qsort function.
 		 * Example code: qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
@@ -433,7 +431,7 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 		do_exit();
 	}
 	/**!
-	 * TODO: Frequency scanner
+	 * TODO #3: Frequency scanner
 	 * Add -S argument for scan mode.
 	 * Add -b argument for frequency range. (eg.: 90 MHz - 100 MHz)
 	 * For frequency scanning we have to recalculate center frequency,
