@@ -392,7 +392,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 		 * with a different color.  Might be useful for some kind of 
 		 * frequency scanner.
 		 * If you want to sort values see qsort function.
-		 * Example: qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
+		 * Example code: qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
 		 */
 		sample_bin[i].id = i;
 		sample_bin[i].val = db;
@@ -428,6 +428,7 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 	create_fft(n_read, n_buf);
 	if (_cont_read){
 		usleep(1000*_refresh_rate);
+		rtlsdr_read_async(dev, async_read_callback, NULL, 0, pow(n_read, 2));
 	}else{
 		log_info("Done, exiting...\n");
 		do_exit();
@@ -441,7 +442,20 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 	 * Then, rtlsdr_set_center_freq and rtlsdr_reset_buffer functions should be
 	 * called.
 	 * Optionally, sorting samples/detecting the peaks might be useful 
-	 * with this scanner application.
+	 * with this scanner application. (For sorting, see given qsort example.)
+	 * Example code:
+	 * =========================
+	 *	rtlsdr_cancel_async(dev);
+	 *	_center_freq += pow(10, 5);
+	 *	float center_mhz = _center_freq / pow(10, 6);
+	 *	float step_size = (n_read * pow(10, 3))  / pow(10, 6);
+	 *	gnuplot_exec("set xtics ('%.1f' 1, '%.1f' 256, '%.1f' 512)\n", 
+	 *	center_mhz-step_size, 
+	 *	center_mhz, 
+	 *	center_mhz+step_size);
+   	 *	rtlsdr_set_center_freq(dev, _center_freq);
+	 *	rtlsdr_reset_buffer(dev);
+	 * =========================
 	 */
 }
 /*!
