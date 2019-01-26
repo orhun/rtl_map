@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <time.h>
+/*! External libraries */
 #include <fftw3.h>
 #include <rtl-sdr.h>
 
@@ -359,8 +360,10 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * Compute FFT.
 	 */
 	fftw_execute(fftwp);
-	if(!_cont_read)
+	if(!_cont_read && _use_gnuplot)
 		log_info("Creating FFT graph from samples using gnuplot...\n");
+	else if (!_cont_read && !_use_gnuplot)
+		log_info("Reading samples...\n");
 	if(_use_gnuplot)
 		gnuplot_exec("plot '-' smooth frequency with linespoints lt -1 notitle\n");
 	for (int i=0; i < sample_c; i++){
