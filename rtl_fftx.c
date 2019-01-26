@@ -65,6 +65,7 @@ static time_t raw_time; /*!< Represents time value */
  * the purpose of storing sample IDs and values to
  * make data processing operations more easier and faster.
  * Such as classification and sorting.
+ *
  * NOTE: This variable is not used properly yet,
  * just copying values and IDs in it for now.
  */
@@ -186,6 +187,7 @@ static int configure_gnuplot(){
 	* Step size = [(512*10^3)/10^6] = 0.512
 	* Substract and add step size to center frequency for
 	* finding max and min distance from center frequency.
+	*
 	* NOTE: I don't know if this is the right way determine the min/max points.
 	* TODO: Check correctness of this calculation.
 	*/
@@ -264,6 +266,11 @@ static int configure_rtlsdr(){
  * Open file with given _filename parameter.
  * Set 'stdout' output if _filename is given as a single dash.
  * Exits on failure in opening the file.
+ *
+ * NOTE: This block is seperated from parse_args() function
+ * due to some bugs. (About pipe open synchronization I think)
+ * So, we handle open_file after parsing arguments and 
+ * opening gnuplot pipe.
  * 
  * \return 0 on success
  */
@@ -303,9 +310,29 @@ static int cmp_sample(const void * a, const void * b){
  * \param buf array that contains I/Q samples
  */
 static void create_fft(int sample_c, unsigned char *buf){
-	//Configure FFTW to convert the samples in time domain to frequency domain
+	/**! 
+	 * Configure FFTW to convert the samples in time domain to frequency domain. 
+	 * Allocate memory for 'in' and 'out' arrays.
+	 * fftw_complex type is a basically double[2] that composed of the 
+	 * real (in[i][0]) and imaginary (in[i][1]) parts of a complex number.
+	 * in -> Complex numbers processed from processed 8-bit I/Q value.
+	 * out -> Output of FFT (computed from complex input).
+	 */
 	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
 	out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
+	/**!
+	 * Declare FFTW plan which is responsible for having in and out data.
+	 * First parameter (sample_c) -> FFT size 
+	 * FFTW_FORWARD/FFTW_BACKWARD -> Indicates the direction of the transform.
+	 * Technically, sign of the exponent in the transform.
+	 * FFTW_MEASURE/FFTW_ESTIMATE
+	 * Use FFTW_MEASURE if you want to execute several FFTs and find the 
+	 * best computation in a certain amount of time. (Usually a few seconds)
+	 * FFTW_ESTIMATE is the contrary. Does not run any computation, just
+	 * builds a reasonable plan.
+	 * If you are dealing with many transforms of the same FFT size and
+	 * initialization time is not important, use FFT_MEASURE. 
+	 */
 	fftwp = fftw_plan_dft_1d(sample_c, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
 
 	//convert buffer from IQ to complex ready for FFTW, seems that rtlsdr outputs IQ data as IQIQIQIQIQIQ so ......
