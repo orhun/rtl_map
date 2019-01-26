@@ -80,7 +80,7 @@ static Bin sample_bin[NUM_READ]; /*!< 'Bin' array that will contain IDs and valu
  * Print log message with time, level and text.
  * Also supports format specifiers.
  *
- * \param level logging level (info:0, error:1 etc.)
+ * \param level logging level (info:0, error:1, fatal:2)
  * \param format string and format specifiers for vfprintf function  
  * \return 0 on success
  */
@@ -142,7 +142,7 @@ static int register_signals(){
     sigaction(SIGTERM, &sig_act, NULL);
     sigaction(SIGQUIT, &sig_act, NULL);
 	/**!
-	* NOTE: Including the pipe signal might cause 
+	* NOTE: Including the SIGPIPE signal might cause 
 	* problems with the pipe communication.
 	* However, in tests we got any at problems at all.
 	*/
@@ -203,6 +203,7 @@ static int configure_gnuplot(){
  * opening the device with given ID.
  *
  * \return 0 on success
+ * \return 1 on buffer reset error
  */
 static int configure_rtlsdr(){
 	int device_count = rtlsdr_get_device_count();
@@ -224,6 +225,12 @@ static int configure_rtlsdr(){
 	}else{
 		log_info("Using device: #%d\n", dev_open);
 	}
+	/**!
+	 * Set gain mode auto if '_gain' equals to 0.
+ 	 * Otherwise, set gain mode to manual.
+	 * (Mode 1 [manual] needs gain value so 
+	 * gain setter function must be called.)
+ 	 */
 	if(!_gain){
 		rtlsdr_set_tuner_gain_mode(dev, _gain);
 		log_info("Gain mode set to auto.\n");
@@ -237,17 +244,20 @@ static int configure_rtlsdr(){
 			fprintf(stderr, "%.1f ", gains[i] / 10.0);
 		fprintf(stderr, "\n");
 	}
+	/**! 
+	 * Enable or disable offset tuning for zero-IF tuners, which allows to avoid
+ 	 * problems caused by the DC offset of the ADCs and 1/f noise.
+ 	 */
 	rtlsdr_set_offset_tuning(dev, _offset_tuning);
 	rtlsdr_set_center_freq(dev, _center_freq);
 	rtlsdr_set_sample_rate(dev, _samp_rate);
-
 	log_info("Center frequency set to %d Hz.\n", _center_freq);
 	log_info("Sampling at %d S/s\n", _samp_rate);
-
 	int r = rtlsdr_reset_buffer(dev);
-	if (r < 0)
+	if (r < 0){
 		log_fatal("Failed to reset buffers.\n");
-
+		return 1;
+	}
 	return 0;
 }
 /*!
@@ -342,7 +352,7 @@ static void create_fft(int sample_c, unsigned char *buf){
 /*!
  * Asynchronous read callback.
  * Program jump to this function after read operation finished.
- * Operates create_fft() function and provides continuous read
+ * Runs create_fft() function and provides continuous read
  * depending on the -C argument.
  * Exits if -C argument is not given.
  *
