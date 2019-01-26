@@ -388,9 +388,8 @@ static void create_fft(int sample_c, uint8_t *buf){
 		 *
 		 * NOTE: sample_bin is not used anywhere. 
 		 *
-		 * IDEA: Find the maximum value of samples, show it on graph 
-		 * with a different color.  Might be useful for some kind of 
-		 * frequency scanner.
+		 * TODO: Find the maximum value of samples, show it on graph 
+		 * with a different color.  Might be useful for frequency scanner.
 		 * If you want to sort values see qsort function.
 		 * Example code: qsort(sample_bin, n_read, sizeof(Bin), cmp_sample);
 		 */
