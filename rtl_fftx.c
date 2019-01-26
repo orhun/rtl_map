@@ -417,7 +417,7 @@ static void create_fft(int sample_c, uint8_t *buf){
  * Asynchronous read callback.
  * Program jump to this function after read operation finished.
  * Runs create_fft() function and provides continuous read
- * depending on the -C argument.
+ * depending on the -C argument with refresh rate.
  * Exits if -C argument is not given.
  *
  * \param n_buf raw I/Q samples
@@ -432,6 +432,17 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 		log_info("Done, exiting...\n");
 		do_exit();
 	}
+	/**!
+	 * TODO: Frequency scanner
+	 * Add -S argument for scan mode.
+	 * Add -b argument for frequency range. (eg.: 90 MHz - 100 MHz)
+	 * For frequency scanning we have to recalculate center frequency,
+	 * min and max points of graph. 
+	 * Then, rtlsdr_set_center_freq and rtlsdr_reset_buffer functions should be
+	 * called.
+	 * Optionally, sorting samples/detecting the peaks might be useful 
+	 * with this scanner application.
+	 */
 }
 /*!
  * Print usage and exit.
