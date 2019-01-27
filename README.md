@@ -4,7 +4,7 @@
 ![820t2](https://user-images.githubusercontent.com/24392180/51805531-935c4700-227f-11e9-8249-44b849b8e757.jpg)
 
 DVB-T dongles based on the `Realtek RTL2832U` can be used as a cheap SDR (_Software-defined radio_), since the chip allows transferring the raw I/Q (_In-phase / Quadrature_) samples to the host, which is officially used for DAB/DAB+/FM demodulation. 
-([More about History & Discovery of rtl-sdr](http://rtlsdr.org/#history_and_discovery_of_rtlsdr))
+([More about history & discovery of rtl-sdr](http://rtlsdr.org/#history_and_discovery_of_rtlsdr))
 
 There is various software for DSP (_Digital signal processing_), spectral analysis and signal intelligence using RTL-SDR such as [SDR#](https://airspy.com/download/), [gqrx](http://gqrx.dk/) and [gnuradio](https://www.gnuradio.org/). 
 Apart from these, there is [librtlsdr](https://github.com/steve-m/librtlsdr) which most of the user-level packages rely because of the reason that librtlsdr comes as a part of the rtl-sdr codebase. 
