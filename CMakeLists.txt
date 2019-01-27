@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
-# Project rtl_fftx
-project(rtl_fftx C)
+# Project rtl_map
+project(rtl_map C)
 # Check FFTW3
 # http://www.fftw.org/
 message(STATUS "Checking FFTW3...")
@@ -19,7 +19,7 @@ if(RTLSDR_LIB)
 else()
   message(FATAL_ERROR "Cannot find RTL_SDR!")
 endif()
-add_executable(rtl_fftx rtl_fftx.c)
-TARGET_LINK_LIBRARIES(rtl_fftx fftw3 rtlsdr m)
+add_executable(rtl_map rtl_map.c)
+TARGET_LINK_LIBRARIES(rtl_map fftw3 rtlsdr m)
 # Installation
-INSTALL(TARGETS rtl_fftx RUNTIME DESTINATION bin)
+INSTALL(TARGETS rtl_map RUNTIME DESTINATION bin)

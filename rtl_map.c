@@ -1,4 +1,4 @@
-// gcc rtl_fftx.c -o rtl_fftx -lrtlsdr -lfftw3 -lm
+// gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
 
 #include <stdlib.h>
 #include <math.h>
@@ -178,7 +178,7 @@ static int configure_gnuplot(){
 		log_error("Failed to open gnuplot pipe.");
 		exit(1);
 	}
-	gnuplot_exec("set title 'rtl-fftx' enhanced\n");
+	gnuplot_exec("set title 'rtl-map' enhanced\n");
 	gnuplot_exec("set xlabel 'Frequency (kHz)'\n");
 	gnuplot_exec("set ylabel 'Amplitude (dB)'\n");
 	/**!
@@ -462,7 +462,7 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
  * Print usage and exit.
  */
 static void print_usage(){
-	char *usage	= "rtl_fftx, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)\n\n"
+	char *usage	= "rtl_map, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)\n\n"
 				  "Usage:\t[-d device index (default: 0)]\n"
                   "\t[-s samplerate (default: 2048000 Hz)]\n"
 				  "\t[-f center frequency (Hz)] *\n"
