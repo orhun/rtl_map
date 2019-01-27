@@ -45,3 +45,69 @@ sudo ldconfig
 ```
 gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
 ```
+
+## Usage
+### Command Line Arguments
+```
+-d, set device index (default: 0)
+-s, set sample rate (default: 2048000 Hz)
+-f, center frequency (Hz) [only mandatory argument]
+-g, gain (0 for auto) (default: 1.4)
+-r, refresh rate for continuous read (default: 500ms)
+-D, don't show gnuplot graph (default: show)
+-C, continuously read samples (default: off)
+-M, show magnitude graph (default graph: dB)
+-O, disable offset tuning (default: on)
+-T, turn off terminal log colors (default: on)
+-h, show help message and exit
+filename (a '-' dumps samples to stdout)
+```
+
+### Example: Print samples to file
+
+```
+[k3@arch ~]$ rtl_map -f 88000000 -D capture.dat
+[01:00:26] INFO Found 1 device(s):
+[01:00:26] INFO #0: Generic RTL2832U OEM
+Found Rafael Micro R820T tuner
+[01:00:27] INFO Using device: #0
+[01:00:27] INFO Gain set to 14.
+Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
+[01:00:27] INFO Center frequency set to 88000000 Hz.
+[01:00:27] INFO Sampling at 2048000 S/s
+[01:00:27] INFO Reading samples...
+[01:00:27] INFO Done, exiting...
+```
+
+### Example: Print samples to stdout
+
+```
+rtl_map -f 88000000 -D -
+```
+
+![print samples to stdout](https://user-images.githubusercontent.com/24392180/51807038-b0e6dc00-2292-11e9-9978-e2ddf5852e7d.gif)
+
+
+### Example: Create FFT graph from samples
+```
+[k3@arch ~]$ rtl_map -f 88000000
+[01:00:28] INFO Found 1 device(s):
+[01:00:28] INFO #0: Generic RTL2832U OEM
+Found Rafael Micro R820T tuner
+[01:00:28] INFO Using device: #0
+[01:00:28] INFO Gain set to 14.
+Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
+[01:00:29] INFO Center frequency set to 88000000 Hz.
+[01:00:29] INFO Sampling at 2048000 S/s
+[01:00:29] INFO Creating FFT graph from samples using gnuplot...
+[01:00:29] INFO Done, exiting...
+```
+![fft graph](https://user-images.githubusercontent.com/24392180/51806628-2059cd00-228d-11e9-8de6-01f4fc6a0f88.jpg)
+
+### Example: Continuously read samples and create FFT graph
+
+```
+rtl_map -f 88000000 -C 
+```
+
+![continuously read](https://user-images.githubusercontent.com/24392180/51806827-d0c8d080-228f-11e9-8e47-065e4ca0f2a9.gif)
