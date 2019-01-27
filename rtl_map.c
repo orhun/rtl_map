@@ -279,7 +279,7 @@ static int configure_rtlsdr(){
 }
 /*!
  * Open file with given _filename parameter.
- * Set 'stdout' output if _filename is given as a single dash.
+ * Set 'stdout' output if _filename is given as single dash.
  * Exits on failure in opening the file.
  *
  * NOTE: This block is seperated from parse_args() function
@@ -330,7 +330,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * Allocate memory for 'in' and 'out' arrays.
 	 * fftw_complex type is a basically double[2] that composed of the 
 	 * real (in[i][0]) and imaginary (in[i][1]) parts of a complex number.
-	 * in -> Complex numbers processed from processed 8-bit I/Q value.
+	 * in -> Complex numbers processed from 8-bit I/Q values.
 	 * out -> Output of FFT (computed from complex input).
 	 */
 	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*sample_c);
@@ -342,7 +342,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * Technically, sign of the exponent in the transform.
 	 * FFTW_MEASURE/FFTW_ESTIMATE
 	 * Use FFTW_MEASURE if you want to execute several FFTs and find the 
-	 * best computation in a certain amount of time. (Usually a few seconds)
+	 * best computation in certain amount of time. (Usually a few seconds)
 	 * FFTW_ESTIMATE is the contrary. Does not run any computation, just
 	 * builds a reasonable plan.
 	 * If you are dealing with many transforms of the same FFT size and
@@ -351,7 +351,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	fftwp = fftw_plan_dft_1d(sample_c, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
 	/**!
 	 * Convert buffer from IQ to complex ready for FFTW.
-	 * RTL-SDR's output is 'IQIQIQ...' so we have to read two samples 
+	 * RTL-SDR outputs 'IQIQIQ...' so we have to read two samples 
 	 * at the same time. 'n' is declared for this approach.
 	 * Sample is 127 for zero signal, so substract 127 for exact value.
 	 * Loop through samples and fill 'in' array with complex samples.
