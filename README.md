@@ -15,6 +15,33 @@ Most of the technically questions RTL-SDR enthusiasts ask is about reading sampl
 
 Another purpose of this project is making a testing tool & frequency scanner application for security researches.
 
+## Installation
 
+### Dependencies
+* libusb1.0 (development packages must be installed manually, see [libusb.info](https://libusb.info/))
+* gnuplot (must be installed manually, see [installation page](http://gausssum.sourceforge.net/DocBook/ch01s03.html))
+* librtlsdr (cmake / automatic installation & linking)
+* fftw3 (cmake / automatic installation & linking)
 
+### Clone Repository
 
+```
+git clone https://github.com/KeyLo99/rtl_map
+```
+
+### Building with CMake (recommended)
+
+```
+cd rtl_map
+mkdir build
+cd build
+cmake ../
+make
+sudo make install
+sudo ldconfig
+```
+### Building with GCC
+
+```
+gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
+```
