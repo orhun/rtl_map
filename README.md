@@ -72,7 +72,8 @@ filename (a '-' dumps samples to stdout)
 Found Rafael Micro R820T tuner
 [01:00:27] INFO Using device: #0
 [01:00:27] INFO Gain set to 14.
-Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
+Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 
+28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
 [01:00:27] INFO Center frequency set to 88000000 Hz.
 [01:00:27] INFO Sampling at 2048000 S/s
 [01:00:27] INFO Reading samples...
@@ -87,7 +88,6 @@ rtl_map -f 88000000 -D -
 
 ![print samples to stdout](https://user-images.githubusercontent.com/24392180/51807038-b0e6dc00-2292-11e9-9978-e2ddf5852e7d.gif)
 
-
 ### Example: Create FFT graph from samples
 ```
 [k3@arch ~]$ rtl_map -f 88000000
@@ -96,7 +96,8 @@ rtl_map -f 88000000 -D -
 Found Rafael Micro R820T tuner
 [01:00:28] INFO Using device: #0
 [01:00:28] INFO Gain set to 14.
-Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
+Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 
+28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
 [01:00:29] INFO Center frequency set to 88000000 Hz.
 [01:00:29] INFO Sampling at 2048000 S/s
 [01:00:29] INFO Creating FFT graph from samples using gnuplot...
