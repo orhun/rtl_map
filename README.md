@@ -73,7 +73,7 @@ Found Rafael Micro R820T tuner
 [01:00:27] INFO Using device: #0
 [01:00:27] INFO Gain set to 14.
 Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 
-28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
+128.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6 
 [01:00:27] INFO Center frequency set to 88000000 Hz.
 [01:00:27] INFO Sampling at 2048000 S/s
 [01:00:27] INFO Reading samples...
@@ -112,3 +112,15 @@ rtl_map -f 88000000 -C
 ```
 
 ![continuously read](https://user-images.githubusercontent.com/24392180/51806827-d0c8d080-228f-11e9-8e47-065e4ca0f2a9.gif)
+
+## DC Offset & I/Q Imbalance
+
+There is a common issue with cheap RTL-SDR receivers which is `center frequency spike` / `central peak` problem related to I/Q imbalance. This problem can be solved with a implementation of some algorithms. (For more details: [#1](https://github.com/roger-/pyrtlsdr/issues/94), [#2](https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms1-ebz/iq_correction))
+
+## TODO(s)
+1. Implement I/Q correction
+2. Find the maximum value of samples, show it on graph with a different color.  Might be useful for frequency scanner.
+3. Frequency scanner feature
+4. Check correctness of min/max point calculation.
+5. Check correctness of amplitude (dB) calculation.
+
