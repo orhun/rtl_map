@@ -1,4 +1,11 @@
-# rtl_map 
+# rtl_map <a href="https://github.com/KeyLo99/rtl_map/releases"><img src="https://img.shields.io/github/release/KeyLo99/rtl_map.svg"/>
+</a>
+<a href="https://github.com/KeyLo99/rtl_map/issues"><img src="https://img.shields.io/github/issues/KeyLo99/rtl_map.svg"/></a>
+<a href="https://github.com/KeyLo99/rtl_map/pulls"><img src="https://img.shields.io/github/issues-pr/KeyLo99/rtl_map.svg"/></a>
+<a href="https://github.com/KeyLo99/rtl_map/stargazers"><img src="https://img.shields.io/github/stars/KeyLo99/rtl_map.svg"/></a>
+<a href="https://github.com/KeyLo99/rtl_map/network"><img src="https://img.shields.io/github/forks/KeyLo99/rtl_map.svg"/></a>
+<a href="https://github.com/KeyLo99/rtl_map/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KeyLo99/rtl_map.svg"/></a>
+
 ### FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)
 
 ![820t2](https://user-images.githubusercontent.com/24392180/51805531-935c4700-227f-11e9-8249-44b849b8e757.jpg)
