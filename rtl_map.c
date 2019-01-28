@@ -480,7 +480,7 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 static void print_usage(){
 	char *usage	= "rtl_map, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)\n\n"
 				  "Usage:\t[-d device index (default: 0)]\n"
-                  "\t[-s samplerate (default: 2048000 Hz)]\n"
+                  "\t[-s sample rate (default: 2048000 Hz)]\n"
 				  "\t[-f center frequency (Hz)] *\n"
 				  "\t[-g gain (0 for auto) (default: 1.4)]\n"
 				  "\t[-r refresh rate for -C read (default: 500ms)]\n"
