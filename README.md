@@ -51,7 +51,7 @@ gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
 ```
 -d, set device index (default: 0)
 -s, set sample rate (default: 2048000 Hz)
--f, center frequency (Hz) [only mandatory argument]
+-f, center frequency (Hz) [mandatory argument]
 -g, gain (0 for auto) (default: 1.4)
 -r, refresh rate for continuous read (default: 500ms)
 -D, don't show gnuplot graph (default: show)
@@ -115,7 +115,7 @@ rtl_map -f 88000000 -C
 
 ## DC Offset & I/Q Imbalance
 
-There is a common issue with cheap RTL-SDR receivers which is `center frequency spike` / `central peak` problem related to I/Q imbalance. This problem can be solved with a implementation of some algorithms. (For more details: [#1](https://github.com/roger-/pyrtlsdr/issues/94), [#2](https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms1-ebz/iq_correction))
+There is a common issue with cheap RTL-SDR receivers which is `center frequency spike` or `central peak` problem related to I/Q imbalance. This problem can be solved with a implementation of some algorithms. (For more details: [#1](https://github.com/roger-/pyrtlsdr/issues/94), [#2](https://wiki.analog.com/resources/eval/user-guides/ad-fmcomms1-ebz/iq_correction))
 
 ## TODO(s)
 1. Implement I/Q correction
@@ -124,3 +124,15 @@ There is a common issue with cheap RTL-SDR receivers which is `center frequency 
 4. Check correctness of min/max point calculation.
 5. Check correctness of amplitude (dB) calculation.
 
+## Contribution
+
+You can contribute to this project if you are a RTL-SDR enthusiast or researcher. Fork the repository and start coding.
+I hope some people on this planet will consider my TODO(s) and help me build the frequency scanner tool :)
+
+## License
+
+GNU General Public License v3. (see [gpl](https://www.gnu.org/licenses/gpl.txt))
+
+## Credit
+
+Copyright (C) 2019 by KeyLo99 https://www.github.com/KeyLo99
