@@ -228,6 +228,7 @@ static int configure_rtlsdr(){
 		log_error("No supported devices found.\n");
 		exit(1);
 	}
+	log_info("Starting rtl_map ~\n");
 	log_info("Found %d device(s):\n", device_count);
 	for(int i = 0; i < device_count; i++){
 		if(_log_colors)

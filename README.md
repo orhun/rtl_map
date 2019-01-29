@@ -74,6 +74,7 @@ filename (a '-' dumps samples to stdout)
 
 ```
 [k3@arch ~]$ rtl_map -f 88000000 -D capture.dat
+[01:00:26] INFO Starting rtl_map ~
 [01:00:26] INFO Found 1 device(s):
 [01:00:26] INFO #0: Generic RTL2832U OEM
 Found Rafael Micro R820T tuner
@@ -98,6 +99,7 @@ rtl_map -f 88000000 -D -
 ### Example: Create FFT graph from samples
 ```
 [k3@arch ~]$ rtl_map -f 88000000
+[01:00:28] INFO Starting rtl_map ~
 [01:00:28] INFO Found 1 device(s):
 [01:00:28] INFO #0: Generic RTL2832U OEM
 Found Rafael Micro R820T tuner
