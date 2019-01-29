@@ -59,7 +59,7 @@ gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
 -d, set device index (default: 0)
 -s, set sample rate (default: 2048000 Hz)
 -f, center frequency (Hz) [mandatory argument]
--g, gain (0 for auto) (default: 1.4)
+-g gain (0 for auto) (default: ~1-3)
 -r, refresh rate for continuous read (default: 500ms)
 -D, don't show gnuplot graph (default: show)
 -C, continuously read samples (default: off)
