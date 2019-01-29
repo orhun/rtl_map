@@ -253,13 +253,21 @@ static int configure_rtlsdr(){
 		log_info("Gain mode set to auto.\n");
 	}else{
 		rtlsdr_set_tuner_gain_mode(dev, 1);
-		rtlsdr_set_tuner_gain(dev, _gain);
 		int gain_count = rtlsdr_get_tuner_gains(dev, NULL);
-		log_info("Gain set to %d.\nSupported gain values (%d): ", _gain, gain_count);
+		log_info("Supported gain values (%d): ", gain_count);
 		int gains[gain_count], supported_gains = rtlsdr_get_tuner_gains(dev, gains);
-		for (int i = 0; i < supported_gains; i++)
+		for (int i = 0; i < supported_gains; i++){
+			/**!
+			 * Different RTL-SDR devices have different supported gain
+			 * values. So select gain value between 1.0 and 3.0
+			 */
+			if (gains[i] > 10 && gains[i] < 30)
+				_gain = gains[i];
 			fprintf(stderr, "%.1f ", gains[i] / 10.0);
+		}
 		fprintf(stderr, "\n");
+		log_info("Gain set to %.1f\n", _gain / 10.0);
+		rtlsdr_set_tuner_gain(dev, _gain);
 	}
 	/**! 
 	 * Enable or disable offset tuning for zero-IF tuners, which allows to avoid
@@ -482,7 +490,7 @@ static void print_usage(){
 				  "Usage:\t[-d device index (default: 0)]\n"
                   "\t[-s sample rate (default: 2048000 Hz)]\n"
 				  "\t[-f center frequency (Hz)] *\n"
-				  "\t[-g gain (0 for auto) (default: 1.4)]\n"
+				  "\t[-g gain (0 for auto) (default: ~1-3)]\n"
 				  "\t[-r refresh rate for -C read (default: 500ms)]\n"
 				  "\t[-D don't show gnuplot graph (default: show)]\n"
 				  "\t[-C continuously read samples (default: off)]\n"
