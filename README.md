@@ -22,6 +22,8 @@ Most of the technically questions RTL-SDR enthusiasts ask is about reading sampl
 
 Another purpose of this project is making a testing tool & frequency scanner application for security researches.
 
+[https://www.rtl-sdr.com/rtl_map-a-simple-fft-visualizer-for-rtl-sdr/](https://www.rtl-sdr.com/rtl_map-a-simple-fft-visualizer-for-rtl-sdr/)
+
 ## Installation
 
 ### Dependencies
