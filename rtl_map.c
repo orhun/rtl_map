@@ -50,7 +50,7 @@ static int n, /*!< Used at raw I/Q data to complex conversion */
 	out_r, out_i, /*!< Real and imaginary parts of FFT *out values */
 	_center_freq, /*!< [ARG] RTL-SDR center frequency (mandatory) */
 	_dev_id = 0, /*!< [ARG] RTL-SDR device ID (optional) */
-	_samp_rate = n_read * 4000, /*!< [ARG] Sample rate (optional) */
+	_samp_rate = NUM_READ * 4000, /*!< [ARG] Sample rate (optional) */
 	_gain = 14, /*!< [ARG] Device gain (optional) */
 	_refresh_rate = 500, /*!< [ARG] Refresh interval for continuous read (optional) */
 	_use_gnuplot = 1, /*!< [ARG] Use gnuplot or not (optional) */
