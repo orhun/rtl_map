@@ -357,7 +357,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * If you are dealing with many transforms of the same FFT size and
 	 * initialization time is not important, use FFT_MEASURE. 
 	 */
-	fftwp = fftw_plan_dft_1d(sample_c, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+	fftwp = fftw_plan_dft_1d(sample_c, in, out, FFTW_FORWARD, FFTW_MEASURE);
 	/**!
 	 * Convert buffer from IQ to complex ready for FFTW.
 	 * RTL-SDR outputs 'IQIQIQ...' so we have to read two samples 
