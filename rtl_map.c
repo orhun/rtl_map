@@ -195,7 +195,7 @@ static int configure_gnuplot(){
 		exit(1);
 	}
 	gnuplot_exec("set title 'rtl-map' enhanced\n");
-	gnuplot_exec("set xlabel 'Frequency (mHz)'\n");
+	gnuplot_exec("set xlabel 'Frequency (MHz)'\n");
 	gnuplot_exec("set ylabel 'Amplitude (dB)'\n");
 	/**!
 	* Compute center frequency in MHz. [Center freq./10^6]

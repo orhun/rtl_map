@@ -114,7 +114,8 @@ Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7
 [01:00:29] INFO Creating FFT graph from samples using gnuplot...
 [01:00:29] INFO Done, exiting...
 ```
-![fft graph](https://user-images.githubusercontent.com/24392180/51806628-2059cd00-228d-11e9-8de6-01f4fc6a0f88.jpg)
+![fft graph](https://user-images.githubusercontent.com/24392180/52183133-e3a24e80-2815-11e9-8218-8d4e681faa28.png)
+
 
 ### Example: Continuously read samples and create FFT graph
 
