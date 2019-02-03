@@ -120,10 +120,11 @@ Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7
 ### Example: Continuously read samples and create FFT graph
 
 ```
-rtl_map -f 88000000 -C 
+rtl_map -f 88000000 -C -r 100
 ```
 
-![continuously read](https://user-images.githubusercontent.com/24392180/51806827-d0c8d080-228f-11e9-8e47-065e4ca0f2a9.gif)
+![continuously read](https://user-images.githubusercontent.com/24392180/52183332-df773080-2817-11e9-9486-e90eabeec3cd.gif)
+
 
 ## DC Offset & I/Q Imbalance
 
