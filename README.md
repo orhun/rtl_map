@@ -123,7 +123,7 @@ Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7
 rtl_map -f 88000000 -C -r 100
 ```
 
-![continuously read](https://user-images.githubusercontent.com/24392180/52183332-df773080-2817-11e9-9486-e90eabeec3cd.gif)
+![continuously read](https://user-images.githubusercontent.com/24392180/52239109-bbcaed80-28de-11e9-921e-7c438f42a4c9.gif)
 
 
 ## DC Offset & I/Q Imbalance
