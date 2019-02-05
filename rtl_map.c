@@ -398,8 +398,8 @@ static void create_fft(int sample_c, uint8_t *buf){
 		 *
 		 * TODO #5: Check correctness of this calculation.
 		 */
-		out_r = pow(creal(out[i]), 2);
-		out_i =  pow(cimag(out[i]), 2);
+		out_r = creal(out[i]) * creal(out[i]);
+		out_i = cimag(out[i]) * cimag(out[i]);
 		amp = sqrt(out_r + out_i);
 		if (!_mag_graph)
 			db = 10 * log10(amp);
@@ -453,7 +453,7 @@ static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 	create_fft(n_read, n_buf);
 	if (_cont_read){
 		usleep(1000*_refresh_rate);
-		rtlsdr_read_async(dev, async_read_callback, NULL, 0, pow(n_read, 2));
+		rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
 	}else{
 		log_info("Done, exiting...\n");
 		do_exit();
@@ -572,5 +572,5 @@ void main(int argc, char **argv){
 	configure_gnuplot();
 	configure_rtlsdr();
 	open_file();
-	rtlsdr_read_async(dev, async_read_callback, NULL, 0, pow(n_read, 2));
+	rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
 }
