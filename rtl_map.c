@@ -362,7 +362,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 * Convert buffer from IQ to complex ready for FFTW.
 	 * RTL-SDR outputs 'IQIQIQ...' so we have to read two samples 
 	 * at the same time. 'n' is declared for this approach.
-	 * Sample is 127 for zero signal, so substract 127 for exact value.
+	 * Sample is 127 for zero signal, so substract ~127.34 for exact value.
 	 * Loop through samples and fill 'in' array with complex samples.
 	 * 
 	 * NOTE: There is a common issue with cheap RTL-SDR receivers which
@@ -377,7 +377,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	 */
 	n = 0;
 	for (int i=0; i<sample_c; i+=2){
-		in[i] = (buf[n]-127) + (buf[n+1]-127) * I;
+		in[i] = (buf[n]-127.34) + (buf[n+1]-127.34) * I;
 		n++;
 	}
 	/**! 
