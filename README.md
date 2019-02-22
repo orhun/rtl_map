@@ -136,6 +136,7 @@ There is a common issue with cheap RTL-SDR receivers which is `center frequency 
 3. Frequency scanner feature
 4. Check correctness of min/max point calculation.
 5. Check correctness of amplitude (dB) calculation.
+6. Add -n argument for number of reads
 * 820T2 tuner used for testing. Other RTL-SDR devices must be tested.
 
 ## Contribution
