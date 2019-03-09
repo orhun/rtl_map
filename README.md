@@ -62,6 +62,7 @@ gcc rtl_map.c -o rtl_map -lrtlsdr -lfftw3 -lm
 -s, set sample rate (default: 2048000 Hz)
 -f, center frequency (Hz) [mandatory argument]
 -g gain (0 for auto) (default: ~1-3)
+-n number of reads (default: int_max.)
 -r, refresh rate for continuous read (default: 500ms)
 -D, don't show gnuplot graph (default: show)
 -C, continuously read samples (default: off)
@@ -97,6 +98,12 @@ rtl_map -f 88000000 -D -
 ```
 
 ![print samples to stdout](https://user-images.githubusercontent.com/24392180/51807038-b0e6dc00-2292-11e9-9978-e2ddf5852e7d.gif)
+
+### Example: Print 10x512 samples to stdout
+
+```
+rtl_map -f 88000000 -D -C -n 10 -
+```
 
 ### Example: Create FFT graph from samples
 ```
