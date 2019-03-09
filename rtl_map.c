@@ -53,6 +53,7 @@ static int n, /*!< Used at raw I/Q data to complex conversion */
 	_samp_rate = NUM_READ * 4000, /*!< [ARG] Sample rate (optional) */
 	_gain = 14, /*!< [ARG] Device gain (optional) */
 	_refresh_rate = 500, /*!< [ARG] Refresh interval for continuous read (optional) */
+	_num_read = -1, /*!< [ARG] Number of reads (optional) */
 	_use_gnuplot = 1, /*!< [ARG] Use gnuplot or not (optional) */
 	_cont_read = 0, /*!< [ARG] Continuously read samples from device (optional) */
 	_mag_graph = 0, /*!< [ARG] Show magnitude instead of dB (optional) */
@@ -492,6 +493,7 @@ static void print_usage(){
                   "\t[-s sample rate (default: 2048000 Hz)]\n"
 				  "\t[-f center frequency (Hz)] *\n"
 				  "\t[-g gain (0 for auto) (default: ~1-3)]\n"
+				  "\t[-n number of reads (default: inf.)]\n"
 				  "\t[-r refresh rate for -C read (default: 500ms)]\n"
 				  "\t[-D don't show gnuplot graph (default: show)]\n"
 				  "\t[-C continuously read samples (default: off)]\n"
@@ -512,7 +514,7 @@ static void print_usage(){
  */
 static int parse_args(int argc, char **argv){
 	int opt;
-	while ((opt = getopt(argc, argv, "d:s:f:g:r:DCMOTh")) != -1) {
+	while ((opt = getopt(argc, argv, "d:s:f:g:r:n:DCMOTh")) != -1) {
         switch (opt) {
             case 'd':
                 _dev_id = atoi(optarg);
@@ -529,6 +531,10 @@ static int parse_args(int argc, char **argv){
                 break;
 			case 'r':
                 _refresh_rate = atoi(optarg);
+                break;
+			case 'n':
+                _num_read = atoi(optarg);
+				printf("%d", _num_read);
                 break;
 			case 'D':
                 _use_gnuplot = 0;
@@ -568,9 +574,9 @@ static int parse_args(int argc, char **argv){
  */
 void main(int argc, char **argv){
 	parse_args(argc, argv);
-	register_signals();
-	configure_gnuplot();
-	configure_rtlsdr();
-	open_file();
-	rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
+	//register_signals();
+	//configure_gnuplot();
+	//configure_rtlsdr();
+	//open_file();
+	//rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
 }
