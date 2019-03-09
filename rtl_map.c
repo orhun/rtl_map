@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <time.h>
+#include <limits.h>
 /*! External libraries */
 #include <fftw3.h>
 #include <rtl-sdr.h>
@@ -54,7 +55,7 @@ static int n, /*!< Used at raw I/Q data to complex conversion */
 	_samp_rate = NUM_READ * 4000, /*!< [ARG] Sample rate (optional) */
 	_gain = 14, /*!< [ARG] Device gain (optional) */
 	_refresh_rate = 500, /*!< [ARG] Refresh interval for continuous read (optional) */
-	_num_read = -1, /*!< [ARG] Number of reads (optional) */
+	_num_read = INT_MAX, /*!< [ARG] Number of reads, set to max val of int (optional) */
 	_use_gnuplot = 1, /*!< [ARG] Use gnuplot or not (optional) */
 	_cont_read = 0, /*!< [ARG] Continuously read samples from device (optional) */
 	_mag_graph = 0, /*!< [ARG] Show magnitude instead of dB (optional) */
