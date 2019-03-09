@@ -47,7 +47,7 @@ static FILE *gnuplotPipe, *file; /**!
 static struct sigaction sig_act; /*!< For changing the signal actions */
 static const int n_read = NUM_READ; /*!< Sample count & data points & FFT size */
 static int n, /*!< Used at raw I/Q data to complex conversion */
-	reads = 0, /*!< Current read count */
+	read_count = 0, /*!< Current read count */
 	out_r, out_i, /*!< Real and imaginary parts of FFT *out values */
 	_center_freq, /*!< [ARG] RTL-SDR center frequency (mandatory) */
 	_dev_id = 0, /*!< [ARG] RTL-SDR device ID (optional) */
@@ -439,6 +439,7 @@ static void create_fft(int sample_c, uint8_t *buf){
 	fftw_destroy_plan(fftwp);
 	fftw_free(in); 
 	fftw_free(out);
+	read_count++;
 }
 /*!
  * Asynchronous read callback.
@@ -453,7 +454,7 @@ static void create_fft(int sample_c, uint8_t *buf){
  */
 static void async_read_callback(uint8_t *n_buf, uint32_t len, void *ctx){
 	create_fft(n_read, n_buf);
-	if (_cont_read){
+	if (_cont_read && read_count < _num_read){
 		usleep(1000*_refresh_rate);
 		rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
 	}else{
