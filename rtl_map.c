@@ -47,6 +47,7 @@ static FILE *gnuplotPipe, *file; /**!
 static struct sigaction sig_act; /*!< For changing the signal actions */
 static const int n_read = NUM_READ; /*!< Sample count & data points & FFT size */
 static int n, /*!< Used at raw I/Q data to complex conversion */
+	reads = 0, /*!< Current read count */
 	out_r, out_i, /*!< Real and imaginary parts of FFT *out values */
 	_center_freq, /*!< [ARG] RTL-SDR center frequency (mandatory) */
 	_dev_id = 0, /*!< [ARG] RTL-SDR device ID (optional) */
@@ -534,7 +535,6 @@ static int parse_args(int argc, char **argv){
                 break;
 			case 'n':
                 _num_read = atoi(optarg);
-				printf("%d", _num_read);
                 break;
 			case 'D':
                 _use_gnuplot = 0;
@@ -574,9 +574,9 @@ static int parse_args(int argc, char **argv){
  */
 void main(int argc, char **argv){
 	parse_args(argc, argv);
-	//register_signals();
-	//configure_gnuplot();
-	//configure_rtlsdr();
-	//open_file();
-	//rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
+	register_signals();
+	configure_gnuplot();
+	configure_rtlsdr();
+	open_file();
+	rtlsdr_read_async(dev, async_read_callback, NULL, 0, n_read * n_read);
 }
