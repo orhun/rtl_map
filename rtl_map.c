@@ -496,7 +496,7 @@ static void print_usage(){
                   "\t[-s sample rate (default: 2048000 Hz)]\n"
 				  "\t[-f center frequency (Hz)] *\n"
 				  "\t[-g gain (0 for auto) (default: ~1-3)]\n"
-				  "\t[-n number of reads (default: inf.)]\n"
+				  "\t[-n number of reads (default: int_max.)]\n"
 				  "\t[-r refresh rate for -C read (default: 500ms)]\n"
 				  "\t[-D don't show gnuplot graph (default: show)]\n"
 				  "\t[-C continuously read samples (default: off)]\n"
