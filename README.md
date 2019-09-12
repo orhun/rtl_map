@@ -1,10 +1,10 @@
-# rtl_map <a href="https://github.com/KeyLo99/rtl_map/releases"><img src="https://img.shields.io/github/release/KeyLo99/rtl_map.svg"/>
+# rtl_map <a href="https://github.com/orhun/rtl_map/releases"><img src="https://img.shields.io/github/release/orhun/rtl_map.svg"/>
 </a>
-<a href="https://github.com/KeyLo99/rtl_map/issues"><img src="https://img.shields.io/github/issues/KeyLo99/rtl_map.svg"/></a>
-<a href="https://github.com/KeyLo99/rtl_map/pulls"><img src="https://img.shields.io/github/issues-pr/KeyLo99/rtl_map.svg"/></a>
-<a href="https://github.com/KeyLo99/rtl_map/stargazers"><img src="https://img.shields.io/github/stars/KeyLo99/rtl_map.svg"/></a>
-<a href="https://github.com/KeyLo99/rtl_map/network"><img src="https://img.shields.io/github/forks/KeyLo99/rtl_map.svg"/></a>
-<a href="https://github.com/KeyLo99/rtl_map/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KeyLo99/rtl_map.svg"/></a>
+<a href="https://github.com/orhun/rtl_map/issues"><img src="https://img.shields.io/github/issues/orhun/rtl_map.svg"/></a>
+<a href="https://github.com/orhun/rtl_map/pulls"><img src="https://img.shields.io/github/issues-pr/orhun/rtl_map.svg"/></a>
+<a href="https://github.com/orhun/rtl_map/stargazers"><img src="https://img.shields.io/github/stars/orhun/rtl_map.svg"/></a>
+<a href="https://github.com/orhun/rtl_map/network"><img src="https://img.shields.io/github/forks/orhun/rtl_map.svg"/></a>
+<a href="https://github.com/orhun/rtl_map/blob/master/LICENSE"><img src="https://img.shields.io/github/license/orhun/rtl_map.svg"/></a>
 
 ### FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)
 
@@ -35,7 +35,7 @@ Another purpose of this project is making a testing tool & frequency scanner app
 ### Clone Repository
 
 ```
-git clone https://github.com/KeyLo99/rtl_map
+git clone https://github.com/orhun/rtl_map
 ```
 
 ### Building with CMake (recommended)
@@ -156,4 +156,4 @@ GNU General Public License v3. (see [gpl](https://www.gnu.org/licenses/gpl.txt))
 
 ## Credit
 
-Copyright (C) 2019 by KeyLo99 https://www.github.com/KeyLo99
+Copyright (C) 2019 by orhun https://www.github.com/orhun
