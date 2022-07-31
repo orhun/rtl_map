@@ -132,6 +132,10 @@ rtl_map -f 88000000 -C -r 100
 
 ![continuously read](https://user-images.githubusercontent.com/24392180/52239109-bbcaed80-28de-11e9-921e-7c438f42a4c9.gif)
 
+More example (in german) see
+
+http://blog.wenzlaff.de/?p=12826
+
 
 ## DC Offset & I/Q Imbalance
 
