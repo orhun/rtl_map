@@ -1,6 +1,6 @@
 /*
  * rtl_map, a FFT-based visualizer for RTL-SDR devices. (RTL2832/DVB-T)
- * Copyright (C) 2019-2020 by orhun <https://www.github.com/orhun>
+ * Copyright (C) 2019-2023 by orhun <https://www.github.com/orhun>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
